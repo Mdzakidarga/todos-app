@@ -52,17 +52,12 @@ pipeline {
                 '''
             }
         }
-
-
+        
         stage('Deploy') {
-                environment {
-                    DEPLOY_SSH_KEY = credentials('AWS_INSTANCE_SSH')
-                }
-
-                steps {
+            steps {
+                withCredentials([sshUserPrivateKey(credentialsId: 'AWS_INSTANCE_SSH', keyFileVariable: 'DEPLOY_SSH_KEY')]) {
                     sh '''
-                        ssh -v -i $DEPLOY_SSH_KEY ubuntu@$PRODUCTION_IP_ADRESSS '
-                            
+                        ssh -o StrictHostKeyChecking=no -i $DEPLOY_SSH_KEY ubuntu@13.48.196.184 << 'EOF'
                             if [ ! -d "todos-app" ]; then
                                 git clone https://github.com/AhmadMazaal/todos-app.git todos-app
                                 cd todos-app
@@ -72,15 +67,17 @@ pipeline {
                             fi
 
                             yarn install
-                            
+                    
                             if pm2 describe todos-app > /dev/null ; then
-                            pm2 restart todos-app
+                                pm2 restart todos-app
                             else
                                 yarn start:pm2
                             fi
-                        '
+                        EOF
                     '''
                 }
             }
+        }
+
     }
 }
