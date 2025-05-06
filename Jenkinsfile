@@ -42,17 +42,17 @@ pipeline {
                     sh 'pm2 stop todos-app'
                 }
             }
-        }  
-
+        }
+        
         stage('Add Host to known_hosts') {
             steps {
-                script {
-                    sh '''
-                        ssh-keyscan -H $PRODUCTION_IP_ADRESSS >> /var/lib/jenkins/.ssh/known_hosts
-                    '''
-                }
+                sh '''
+                mkdir -p /var/lib/jenkins/.ssh
+                ssh-keyscan -H 13.48.196.184 >> /var/lib/jenkins/.ssh/known_hosts
+                '''
             }
         }
+
 
         stage('Deploy') {
                 environment {
