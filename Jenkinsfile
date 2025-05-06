@@ -18,11 +18,15 @@ pipeline {
         stage('Run the App') {
             steps {
                 script {
-                    sh 'yarn start:pm2'
+                    sh '''
+                    npm install -g pm2
+                    yarn start:pm2
                     sleep 5
+                    '''
                 }
             }
         }
+
 
         stage('Test the app') {
             steps {
