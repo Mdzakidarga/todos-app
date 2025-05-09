@@ -48,7 +48,7 @@ pipeline {
             steps {
                 sh '''
                 mkdir -p /var/lib/jenkins/.ssh
-                ssh-keyscan -H 13.48.196.184 >> /var/lib/jenkins/.ssh/known_hosts
+                ssh-keyscan -H 13.53.172.221 >> /var/lib/jenkins/.ssh/known_hosts
                 '''
             }
         }
