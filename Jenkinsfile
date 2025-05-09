@@ -57,7 +57,7 @@ pipeline {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'AWS_INSTANCE_SSH', keyFileVariable: 'DEPLOY_SSH_KEY')]) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no -i $DEPLOY_SSH_KEY ubuntu@13.48.196.184 << 'EOF'
+                        ssh -o StrictHostKeyChecking=no -i $DEPLOY_SSH_KEY ubuntu@13.53.172.221 << 'EOF'
                             if [ ! -d "todos-app" ]; then
                                 git clone https://github.com/AhmadMazaal/todos-app.git todos-app
                                 cd todos-app
