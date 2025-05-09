@@ -57,24 +57,16 @@ pipeline {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'AWS_INSTANCE_SSH', keyFileVariable: 'DEPLOY_SSH_KEY')]) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no -i $DEPLOY_SSH_KEY ubuntu@13.53.172.221 << 'EOF'
-                            if [ ! -d "todos-app" ]; then
-                                git clone https://github.com/AhmadMazaal/todos-app.git todos-app
-                                cd todos-app
-                            else
-                                cd todos-app
-                                git pull
-                            fi
-
-                            yarn install
-                    
-                            if pm2 describe todos-app > /dev/null ; then
-                                pm2 restart todos-app
-                            else
-                                yarn start:pm2
-                            fi
-                        EOF
+                    ssh -o StrictHostKeyChecking=no -i $DEPLOY_SSH_KEY ubuntu@13.53.172.221 << 'EOF'
+                    cd /home/ubuntu/todos-app
+                    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+                    sudo apt-get install -y nodejs
+                    sudo npm install -g pm2
+                    yarn install
+                    pm2 start --interpreter babel-node src/app.js --name todos-app
+                    EOF
                     '''
+
                 }
             }
         }
